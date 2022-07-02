@@ -12,7 +12,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class File {
+public class FileObj {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -24,13 +24,20 @@ public class File {
 
     private String name;
 
-    private String extension;
+    private String contentType;
+
+    public FileObj(String path, Long size, String name, String contentType) {
+        this.path = path;
+        this.size = size;
+        this.name = name;
+        this.contentType = contentType;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        File file = (File) o;
+        FileObj file = (FileObj) o;
         return id != null && Objects.equals(id, file.id);
     }
 
