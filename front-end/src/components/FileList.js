@@ -16,7 +16,15 @@ export default class FileList extends React.Component {
         })
     }
 
+    deleteFile = (id) => {
+        const url = 'http://127.0.0.1:8080/delete/' + id;
+        fetch(url, {
+            mode: "no-cors"
+        });
+    }
+
     render() {
+
         if (this.state.loading) {
             return (<div>Loading</div>);
         }
@@ -27,7 +35,7 @@ export default class FileList extends React.Component {
 
         return (
             <div>
-                <table  className="table table-striped">
+                <table className="table table-striped">
                     <thead>
                         <tr>
                             <th>id</th>
@@ -35,6 +43,8 @@ export default class FileList extends React.Component {
                             <th>size</th>
                             <th>name</th>
                             <th>type</th>
+                            <th>byte[]</th>
+                            <th>delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,6 +56,8 @@ export default class FileList extends React.Component {
                                     <td>{file.size}</td>
                                     <td>{file.name}</td>
                                     <td>{file.contentType}</td>
+                                    <td><a href={"http://127.0.0.1:8080/get/" + file.id} target="_blank"><button className="btn btn-success">Go</button></a></td>
+                                    <td><a href={"http://127.0.0.1:8080/delete/" + file.id}><button className="btn btn-danger">Delete</button></a></td>
                                 </tr>
                             ))
                         }

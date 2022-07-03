@@ -1,6 +1,7 @@
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FileList from './FileList';
+import './UploadForm.css'
 
 function UploadForm() {
     let file;
@@ -39,6 +40,10 @@ function UploadForm() {
 
     return (
         <div>
+            <div className='info-buttons'>
+                <a href='http://127.0.0.1:8080/swagger-ui.html'><button className='btn btn-dark'>Swagger-UI</button></a>
+                <a href='http://127.0.0.1:8080/get'><button className='btn btn-dark'>Get All</button></a>
+            </div>
             <form className="form-inline">
                 <div className="form-group m-3">
                     <label htmlFor="formFile" className="form-label mx-3">File</label>
@@ -46,6 +51,7 @@ function UploadForm() {
                 </div>
                 <input type={"button"} className="btn btn-primary m-3" value="Send" onClick={formDataPost} />
             </form>
+            <hr />
             <FileList />
             <ToastContainer />
         </div>
