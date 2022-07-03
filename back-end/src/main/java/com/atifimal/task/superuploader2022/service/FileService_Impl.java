@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
@@ -39,15 +38,34 @@ public class FileService_Impl implements FileService {
 
     @Override
     public FileObj save(MultipartFile mpFile) {
-        FileObj file = new FileObj(path.concat(Objects.requireNonNull(mpFile.getOriginalFilename())), mpFile.getSize(), mpFile.getOriginalFilename(), mpFile.getContentType());
-        Path root = Paths.get(path);
+        String fileName = fileNameHandler(Objects.requireNonNull(mpFile.getOriginalFilename()));
+        FileObj file = new FileObj(
+                path.concat(fileName),
+                mpFile.getSize(),
+                fileName,
+                mpFile.getContentType());
         try {
-            Files.copy(mpFile.getInputStream(), root.resolve(Objects.requireNonNull(mpFile.getOriginalFilename())));
-            mpFile.getInputStream().close();
+            Files.copy(mpFile.getInputStream(), Paths.get(path).resolve(Objects.requireNonNull(fileName)));
         } catch (Exception e) {
             throw new RuntimeException("Could not save the file. Error: " + e.getMessage());
         }
         return fileRepository.save(file);
     }
 
+    public String fileNameHandler(String fileName) { // If a file exist with the same name, add postfix
+        if (Files.exists(Paths.get(path.concat(fileName)))) {
+            long i = 1;
+            String[] str = fileName.split("\\.");
+            if (str.length > 1) {
+                StringBuilder sb = new StringBuilder();
+                for (int j = 0; j < str.length - 1; j++) sb.append(str[j]);
+                String str2 = sb.toString();
+                String str3 = str[str.length - 1];
+                while (Files.exists(Paths.get(path.concat(str2).concat("(").concat(Long.toString(i).concat(").").concat(str3)))))
+                    i++;
+                fileName = str2.concat("(").concat(Long.toString(i).concat(").").concat(str3));
+            }
+        }
+        return fileName;
+    }
 }
