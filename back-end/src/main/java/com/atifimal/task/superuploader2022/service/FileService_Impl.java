@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -52,6 +53,13 @@ public class FileService_Impl implements FileService {
         return fileRepository.save(file);
     }
 
+    @Override
+    public void deleteById(Long id) throws IOException {
+        String filePath = fileRepository.findById(id).get().getPath();
+        Files.delete(Paths.get(filePath));
+        fileRepository.deleteById(id);
+    }
+
     public String fileNameHandler(String fileName) { // If a file exist with the same name, add postfix
         if (Files.exists(Paths.get(path.concat(fileName)))) {
             long i = 1;
@@ -67,5 +75,11 @@ public class FileService_Impl implements FileService {
             }
         }
         return fileName;
+    }
+
+    @Override
+    public byte[] getFileAsByteArr(Long id) throws IOException {
+        String filePath = fileRepository.findById(id).get().getPath();
+        return Files.readAllBytes(Paths.get(filePath));
     }
 }
