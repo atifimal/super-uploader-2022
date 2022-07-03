@@ -28,7 +28,11 @@ public class FileRestController {
     }
 
     @GetMapping("/get")
-    public List<FileObj> getAll() {
-        return fileService.getAll();
+    public ResponseEntity<List<FileObj>> getAll() {
+        List<FileObj> getAll = fileService.getAll();
+        return ResponseEntity
+                .ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .body(getAll);
     }
 }
